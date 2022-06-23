@@ -1,0 +1,42 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel Init;
+#pragma kernel GetDiff;
+#pragma kernel GetDiffPatch;
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+Texture2D<float4> inputTex;
+RWTexture2D<float4> currentTex;
+RWTexture2D<float4> prevTex;
+RWTexture2D<float4> diffTex;
+
+[numthreads(16,16,1)]
+void Init (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    uint2 uv = id.xy;
+    prevTex[uv] = currentTex[uv];
+}
+
+[numthreads(16,16,1)]
+void GetDiff (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    uint2 uv = id.xy;
+    diffTex[uv] = currentTex[uv] - prevTex[uv];
+    prevTex[uv] = currentTex[uv];
+}
+
+[numthreads(16,16,1)]
+void GetDiffPatch (uint3 id : SV_DispatchThreadID)
+{
+    uint2 uv = id.xy * 8;
+    for(int i = 0; i < 8; i++)
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            uint2 st = uv + uint2(i,j);
+            
+        }
+    }
+}
